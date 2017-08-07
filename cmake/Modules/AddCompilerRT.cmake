@@ -9,25 +9,25 @@ function(set_target_output_directories target output_dir)
   # RUNTIME_OUTPUT_DIRECTORY_DEBUG, RUNTIME_OUTPUT_DIRECTORY_RELEASE, ...
   if(CMAKE_CONFIGURATION_TYPES)
     foreach(build_mode ${CMAKE_CONFIGURATION_TYPES})
-      string(TOUPPER "${build_mode}" CONFIG_SUFFIX)
-	  if(CMAKE_CFG_INTDIR)
-		string(REPLACE "${CMAKE_CFG_INTDIR}" ${build_mode} od ${output_dir})
+      string(TOUPPER "${build_mode}" CONFIG_SUFFIX)  
+      if("${CMAKE_CFG_INTDIR}" STREQUAL ".")
         set_target_properties("${target}" PROPERTIES
-            "ARCHIVE_OUTPUT_DIRECTORY_${CONFIG_SUFFIX}" ${od}
-            "LIBRARY_OUTPUT_DIRECTORY_${CONFIG_SUFFIX}" ${od}
-            "RUNTIME_OUTPUT_DIRECTORY_${CONFIG_SUFFIX}" ${od})
-	  else()
+          "ARCHIVE_OUTPUT_DIRECTORY_${CONFIG_SUFFIX}" ${output_dir}
+          "LIBRARY_OUTPUT_DIRECTORY_${CONFIG_SUFFIX}" ${output_dir}
+          "RUNTIME_OUTPUT_DIRECTORY_${CONFIG_SUFFIX}" ${output_dir})
+      else()
+        string(REPLACE "${CMAKE_CFG_INTDIR}" ${build_mode} od ${output_dir})
         set_target_properties("${target}" PROPERTIES
-            "ARCHIVE_OUTPUT_DIRECTORY_${CONFIG_SUFFIX}" ${output_dir}
-            "LIBRARY_OUTPUT_DIRECTORY_${CONFIG_SUFFIX}" ${output_dir}
-            "RUNTIME_OUTPUT_DIRECTORY_${CONFIG_SUFFIX}" ${output_dir})
-	  endif()
+          "ARCHIVE_OUTPUT_DIRECTORY_${CONFIG_SUFFIX}" ${od}
+          "LIBRARY_OUTPUT_DIRECTORY_${CONFIG_SUFFIX}" ${od}
+          "RUNTIME_OUTPUT_DIRECTORY_${CONFIG_SUFFIX}" ${od})
+      endif()
     endforeach()
   else()
     set_target_properties("${target}" PROPERTIES
-        ARCHIVE_OUTPUT_DIRECTORY ${output_dir}
-        LIBRARY_OUTPUT_DIRECTORY ${output_dir}
-        RUNTIME_OUTPUT_DIRECTORY ${output_dir})
+      ARCHIVE_OUTPUT_DIRECTORY ${output_dir}
+      LIBRARY_OUTPUT_DIRECTORY ${output_dir}
+      RUNTIME_OUTPUT_DIRECTORY ${output_dir})
   endif()
 endfunction()
 
