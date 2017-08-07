@@ -10,10 +10,18 @@ function(set_target_output_directories target output_dir)
   if(CMAKE_CONFIGURATION_TYPES)
     foreach(build_mode ${CMAKE_CONFIGURATION_TYPES})
       string(TOUPPER "${build_mode}" CONFIG_SUFFIX)
-      set_target_properties("${target}" PROPERTIES
-          "ARCHIVE_OUTPUT_DIRECTORY_${CONFIG_SUFFIX}" ${output_dir}
-          "LIBRARY_OUTPUT_DIRECTORY_${CONFIG_SUFFIX}" ${output_dir}
-          "RUNTIME_OUTPUT_DIRECTORY_${CONFIG_SUFFIX}" ${output_dir})
+	  if(CMAKE_CFG_INTDIR)
+		string(REPLACE "${CMAKE_CFG_INTDIR}" ${build_mode} od ${output_dir})
+        set_target_properties("${target}" PROPERTIES
+            "ARCHIVE_OUTPUT_DIRECTORY_${CONFIG_SUFFIX}" ${od}
+            "LIBRARY_OUTPUT_DIRECTORY_${CONFIG_SUFFIX}" ${od}
+            "RUNTIME_OUTPUT_DIRECTORY_${CONFIG_SUFFIX}" ${od})
+	  else()
+        set_target_properties("${target}" PROPERTIES
+            "ARCHIVE_OUTPUT_DIRECTORY_${CONFIG_SUFFIX}" ${output_dir}
+            "LIBRARY_OUTPUT_DIRECTORY_${CONFIG_SUFFIX}" ${output_dir}
+            "RUNTIME_OUTPUT_DIRECTORY_${CONFIG_SUFFIX}" ${output_dir})
+	  endif()
     endforeach()
   else()
     set_target_properties("${target}" PROPERTIES
